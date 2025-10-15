@@ -28,14 +28,20 @@ pipeline {
         // Linux agent (sh). If on Windows agent use 'bat' instead.
         sh "mvn -B clean package"
       }
-      post {
-        success {
-          archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-          junit 'target/surefire-reports/*.xml' // if tests exist
-        }
+
+post {
+  success {
+    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+    script {
+      if (fileExists('target/surefire-reports')) {
+        junit 'target/surefire-reports/*.xml'
+      } else {
+        echo "No test reports found, skipping junit step"
       }
     }
   }
+}
+
 
   post {
     always { echo "Pipeline finished: ${currentBuild.currentResult}" }
