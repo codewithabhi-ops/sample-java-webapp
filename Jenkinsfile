@@ -41,7 +41,8 @@ post {
     }
   }
 }
-
+    }
+  }
 
   post {
     always { echo "Pipeline finished: ${currentBuild.currentResult}" }
