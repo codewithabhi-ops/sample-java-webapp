@@ -29,6 +29,15 @@ pipeline {
         sh "mvn -B clean package"
       }
 
+        stage('SonarQube Analysis') {
+      steps {
+        withSonarQubeEnv('SonarQube') {
+          sh 'mvn sonar:sonar -Dsonar.projectKey=sample-java-webapp -Dsonar.host.url=http://3.27.141.119/:9000'
+        }
+      }
+    }
+
+      
 post {
   success {
     archiveArtifacts artifacts: 'target/*.war', fingerprint: true
