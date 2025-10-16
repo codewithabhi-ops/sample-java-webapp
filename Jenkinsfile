@@ -16,7 +16,7 @@ pipeline {
           branches: [[name: '*/main']], // change branch if needed
           doGenerateSubmoduleConfigurations: false,
           userRemoteConfigs: [[
-            url: 'https://github.com/codewithabhi-ops/sample-java-webapp.git', // change if needed
+            url: 'https://github.com/codewithabhi-ops/sample-java-webapp.git',
             credentialsId: env.GIT_CREDENTIALS
           ]]
         ])
@@ -25,7 +25,6 @@ pipeline {
 
     stage('Build') {
       steps {
-        // Linux agent (sh). If on Windows agent use 'bat' instead.
         sh "mvn -B clean package"
       }
       post {
@@ -46,6 +45,14 @@ pipeline {
       steps {
         withSonarQubeEnv('SonarQube') {
           sh 'mvn sonar:sonar -Dsonar.projectKey=sample-java-webapp -Dsonar.host.url=http://3.27.141.119:9000'
+        }
+      }
+    }
+
+    stage('Quality Gate') {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          waitForQualityGate abortPipeline: true
         }
       }
     }
