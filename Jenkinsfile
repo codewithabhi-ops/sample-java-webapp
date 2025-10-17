@@ -44,13 +44,7 @@ pipeline {
       }
     }
 
-    stage('SonarQube Analysis') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-          sh 'mvn sonar:sonar -Dsonar.projectKey=sample-java-webapp -Dsonar.host.url=http://3.27.141.119:9000'
-        }
-      }
-    }
+
 
     stage('Deploy to Tomcat via SSH') {
       steps {
